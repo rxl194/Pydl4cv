@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# run locally
-# python trainer/c07_knn.py --dataset ../datasets/animals
-
 export BUCKET_NAME=${GBUCKET}
-export JOB_NAME="bjdlsb_c07_$(date +%Y%m%d_%H%M%S)"
-export JOB_DIR="gs://$BUCKET_NAME/gmllog/bjdlsb"
+export JOB_NAME="mnist_mlp_train_$(date +%Y%m%d_%H%M%S)"
+export JOB_DIR=gs://$BUCKET_NAME/gmllog/mnist_mlp_train
 export REGION=${CLOUDSDK_COMPUTE_REGION}
 
 
@@ -16,12 +13,10 @@ echo ${REGION}
 
 
 #For more details on the following commands, see the [`gcloud ml-engine` documentation].
-# gcloud run locally
-#gcloud ml-engine local train \
-#  --module-name trainer.c07_knn \
-#  --package-path ./trainer \
-#  -- \
-#  --dataset ../datasets/animals
+
+#To run the model locally:
+###
+### shell
 
 gcloud ml-engine jobs submit training $JOB_NAME \
     --job-dir $JOB_DIR \
@@ -31,3 +26,4 @@ gcloud ml-engine jobs submit training $JOB_NAME \
     --region $REGION \
     -- \
     --train-file gs://$BUCKET_NAME/gmldata/mnist.pkl
+
