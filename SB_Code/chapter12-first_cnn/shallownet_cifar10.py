@@ -7,6 +7,10 @@ from sklearn.metrics import classification_report
 from pyimagesearch.nn.conv import ShallowNet
 from keras.optimizers import SGD
 from keras.datasets import cifar10
+
+import matplotlib
+matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
 import numpy as np
 

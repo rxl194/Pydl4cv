@@ -8,6 +8,10 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.optimizers import SGD
 from keras.datasets import cifar10
+
+import matplotlib
+matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
