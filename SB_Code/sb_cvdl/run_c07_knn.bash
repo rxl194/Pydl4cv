@@ -26,8 +26,9 @@ echo ${REGION}
 gcloud ml-engine jobs submit training $JOB_NAME \
     --job-dir $JOB_DIR \
     --runtime-version 1.0 \
-    --module-name trainer.mnist_mlp \
+    --module-name trainer.c07_knn \
     --package-path ./trainer \
     --region $REGION \
     -- \
-    --train-file gs://$BUCKET_NAME/gmldata/mnist.pkl
+    --dataset gs://$BUCKET_NAME/gmldata/bjdlsb/animals
+
