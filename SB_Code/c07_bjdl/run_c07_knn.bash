@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # run locally
-# python trainer/c07_knn.py --dataset ../datasets/animals
+# PYTHONPATH=. python trainer/c07_knn.py --dataset ../datasets/animals
 
 export BUCKET_NAME=${GBUCKET}
 export JOB_NAME="bjdlsb_c07_$(date +%Y%m%d_%H%M%S)"
@@ -18,6 +18,7 @@ echo ${REGION}
 #For more details on the following commands, see the [`gcloud ml-engine` documentation].
 # gcloud run locally
 #gcloud ml-engine local train \
+#  --job-dir tmp \
 #  --module-name trainer.c07_knn \
 #  --package-path ./trainer \
 #  -- \
@@ -25,10 +26,13 @@ echo ${REGION}
 
 gcloud ml-engine jobs submit training $JOB_NAME \
     --job-dir $JOB_DIR \
+    --packages ./dist/cvdl_c07_knn-0.0.1.tar.gz \
     --runtime-version 1.0 \
     --module-name trainer.c07_knn \
-    --package-path ./trainer \
+    --package-path . \
     --region $REGION \
+    --config config.yaml \
+    --runtime-version 1.4 \
     -- \
-    --dataset gs://$BUCKET_NAME/gmldata/bjdlsb/animals
+    --dataset gs://$BUCKET_NAME/gmldata/bjdlsb/animals 
 

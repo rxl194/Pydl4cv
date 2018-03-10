@@ -1,0 +1,5 @@
+#!/bin/sh
+
+unset CLOUDSDK_COMPUTE_ZONE
+unset CLOUDSDK_COMPUTE_REGION
+unset GBUCKET
