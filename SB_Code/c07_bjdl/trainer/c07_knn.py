@@ -26,6 +26,8 @@ args = vars(ap.parse_args())
 # grab the list of images that we'll be describing
 print("[INFO] loading images...")
 imagePaths = list(paths.list_images(args["dataset"]))
+print ("[INFO] dataset_path: ", args["dataset"])
+print ("[INFO] len(imagePaths): ", len(imagePaths))
 
 # initialize the image preprocessor, load the dataset from disk,
 # and reshape the data matrix
