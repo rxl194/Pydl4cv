@@ -4,6 +4,8 @@
 # import the necessary packages
 import os
 import argparse
+import pickle
+import json
 
 from bjpy.bjutl  import bjutl_paths
 from bjpy.gcsutl import gcsutil_paths
@@ -33,7 +35,7 @@ def load_img_data(dataset):
 
 def extract_img_label(datasets, imagePaths):
     of = None
-    if datasets and len(datasets)>0:
+    if None and datasets and len(datasets)>0:
         file_path_sep = datasets.split(os.path.sep)
         filename = "dataset_" + file_path_sep[-1] + ".csv"
         of = open(filename, "w")
@@ -56,8 +58,7 @@ def extract_img_label(datasets, imagePaths):
 
 def read_img_label(dataset):
     gcsPaths = gcsutil_paths.GcsImageLabelReader(dataset)
-    imagePaths, images, labels = gcsPaths.read_img_label()
-    return imagePaths, images, labels
+    return gcsPaths.read_img_label()
 
 def read_img_files(imageRoot, images, labels):
     # initialize the image preprocessor, load the dataset from disk,
@@ -67,6 +68,24 @@ def read_img_files(imageRoot, images, labels):
     data, labels = sdl.load(imageRoot, images, labels, verbose=500)
     data = data.reshape((data.shape[0], 3072))
     return (data, labels)
+
+def pickle_dump(datasets, imageRoot, data, labels):
+    if datasets and len(datasets)>0:
+        file_path_sep = datasets.split(os.path.sep)
+
+        data_files = {}
+        filename = "data_" + file_path_sep[-1] + ".pkl"
+        with open(filename, "wb") as f:
+            pickle.dump(data, f)
+        data_files["data"] = filename
+
+        filename = "label_" + file_path_sep[-1] + ".pkl"
+        with open(filename, "wb") as f:
+            pickle.dump(labels, f)
+        data_files["label"] = filename
+
+        with open('datasets.json', 'w') as f:
+            json.dump(data_files, f)
 
 if __name__ == "__main__":
 
@@ -79,16 +98,16 @@ if __name__ == "__main__":
         imagePaths = load_img_data(arg_dataset)
         images, labels = extract_img_label(arg_dataset, imagePaths)
         imageRoot = arg_dataset
+
+        data, labels = read_img_files(imageRoot, images, labels)
+
+        pickle_dump(arg_dataset, imageRoot, data, labels)
+
     else:
-        imageRoot, images, labels = read_img_label(arg_dataset)
+        imageRoot, data, labels = read_img_label(arg_dataset)
 
-    print ("[INFO] imageRoot: ", imageRoot);
-    print ("[INFO] total image loaded: ", len(images))
-    print ("[INFO] total label loaded: ", len(labels))
 
-    data, labels = read_img_files(imageRoot, images, labels)
-
-    print ("[INFO] total data loaded: ",  len(data))
-    print ("[INFO] total label loaded: ", len(labels))
+    print("[INFO] total data loaded: ", len(data))
+    print("[INFO] total label loaded: ", len(labels))
 
 
