@@ -59,14 +59,14 @@ def read_img_label(dataset):
     imagePaths, images, labels = gcsPaths.read_img_label()
     return imagePaths, images, labels
 
-def read_img_files(imagePaths, images, labels):
+def read_img_files(imageRoot, images, labels):
     # initialize the image preprocessor, load the dataset from disk,
     # and reshape the data matrix
     sp = SimplePreprocessor(32, 32)
     sdl = SimpleDatasetLoader(preprocessors=[sp])
-    (data, labels) = sdl.load(imagePaths, verbose=500)
+    data, labels = sdl.load(imageRoot, images, labels, verbose=500)
     data = data.reshape((data.shape[0], 3072))
-    return data
+    return (data, labels)
 
 if __name__ == "__main__":
 
@@ -78,12 +78,17 @@ if __name__ == "__main__":
     if ( args["local"] ):
         imagePaths = load_img_data(arg_dataset)
         images, labels = extract_img_label(arg_dataset, imagePaths)
+        imageRoot = arg_dataset
     else:
-        imagePaths, images, labels = read_img_label(arg_dataset)
+        imageRoot, images, labels = read_img_label(arg_dataset)
 
+    print ("[INFO] imageRoot: ", imageRoot);
     print ("[INFO] total image loaded: ", len(images))
     print ("[INFO] total label loaded: ", len(labels))
 
-    data = read_img_files(imagePaths, images, labels)
+    data, labels = read_img_files(imageRoot, images, labels)
+
+    print ("[INFO] total data loaded: ",  len(data))
+    print ("[INFO] total label loaded: ", len(labels))
 
 
