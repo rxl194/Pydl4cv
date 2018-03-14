@@ -5,8 +5,11 @@
 import os
 import argparse
 
-from bjutl  import bjutl_paths
-from gcsutl import gcsutil_paths
+from bjpy.bjutl  import bjutl_paths
+from bjpy.gcsutl import gcsutil_paths
+
+from bjpy.preprocessing import SimplePreprocessor
+from bjpy.datasets import SimpleDatasetLoader
 
 # construct the argument parse and parse the arguments
 def get_args():
@@ -17,14 +20,14 @@ def get_args():
 	    help="# of nearest neighbors for classification")
     ap.add_argument("--local", action='store_true',
             help="local run")
+    ap.add_argument('--job-dir', default="/tmp",
+      help='Cloud storage bucket to export the model and store temp files') 
     args = vars(ap.parse_args())
     return args
 
 def load_img_data(dataset):
-    print("[INFO] loading dataset images from: ", dataset)
 
     imagePaths = list(bjutl_paths.list_images(args["dataset"]))
-    print ("[INFO] total image loaded: ", len(imagePaths))
 
     return imagePaths
 
@@ -53,20 +56,34 @@ def extract_img_label(datasets, imagePaths):
 
 def read_img_label(dataset):
     gcsPaths = gcsutil_paths.GcsImageLabelReader(dataset)
-    images, labels = gcsPaths.read_img_label()
-    print images, labels
-    return images, labels
+    imagePaths, images, labels = gcsPaths.read_img_label()
+    return imagePaths, images, labels
 
+def read_img_files(imagePaths, images, labels):
+    # initialize the image preprocessor, load the dataset from disk,
+    # and reshape the data matrix
+    sp = SimplePreprocessor(32, 32)
+    sdl = SimpleDatasetLoader(preprocessors=[sp])
+    (data, labels) = sdl.load(imagePaths, verbose=500)
+    data = data.reshape((data.shape[0], 3072))
+    return data
 
 if __name__ == "__main__":
 
     args = get_args()
 
     arg_dataset = args["dataset"]
+    print("[INFO] loading dataset images from: ", arg_dataset)
+
     if ( args["local"] ):
         imagePaths = load_img_data(arg_dataset)
         images, labels = extract_img_label(arg_dataset, imagePaths)
     else:
-        images, labels = read_img_label(arg_dataset)
+        imagePaths, images, labels = read_img_label(arg_dataset)
+
+    print ("[INFO] total image loaded: ", len(images))
+    print ("[INFO] total label loaded: ", len(labels))
+
+    data = read_img_files(imagePaths, images, labels)
 
 

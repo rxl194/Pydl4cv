@@ -5,6 +5,8 @@ __pycache__/
 *.jpg
 *.png
 
+SB_Code/datasets/animals/dataset_animals.csv
+
 # C extensions
 *.so
 

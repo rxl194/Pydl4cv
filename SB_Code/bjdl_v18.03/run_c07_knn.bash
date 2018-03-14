@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # run locally
-PYTHONPATH=. python trainer/c07_knn.py --dataset ../datasets/animals --local
+# PYTHONPATH=. python trainer/c07_knn.py --dataset ../datasets/animals --local
 
 export BUCKET_NAME=${GBUCKET}
 export JOB_NAME="bjdlsb_c07_$(date +%Y%m%d_%H%M%S)"
