@@ -1,0 +1,2 @@
+numpy
+opencv >= 3.3
