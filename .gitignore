@@ -1,11 +1,15 @@
 # Byte-compiled / optimized / DLL files
+
+
 __pycache__/
 *.py[cod]
 *$py.class
 *.jpg
 *.png
 
-SB_Code/datasets/animals/dataset_animals.csv
+SB_Code/datasets/animals/data_animals.pkl
+SB_Code/datasets/animals/datasets.json
+SB_Code/datasets/animals/label_animals.pkl
 
 # C extensions
 *.so
