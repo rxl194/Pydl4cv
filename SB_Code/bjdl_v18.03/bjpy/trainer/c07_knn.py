@@ -12,11 +12,11 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
-from bjpy.bjutl  import bjutl_paths
-from bjpy.gcsutl import gcsutil_paths
+from bjutl  import bjutl_paths
+from gcsutl import gcsutil_paths
 
-from bjpy.preprocessing import SimplePreprocessor
-from bjpy.datasets import SimpleDatasetLoader
+from preprocessing import SimplePreprocessor
+from datasets import SimpleDatasetLoader
 
 # construct the argument parse and parse the arguments
 def get_args():
