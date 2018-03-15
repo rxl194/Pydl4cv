@@ -7,6 +7,11 @@ import argparse
 import pickle
 import json
 
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
 from bjpy.bjutl  import bjutl_paths
 from bjpy.gcsutl import gcsutil_paths
 
@@ -24,6 +29,9 @@ def get_args():
             help="local run")
     ap.add_argument('--job-dir', default="/tmp",
       help='Cloud storage bucket to export the model and store temp files') 
+    ap.add_argument("-j", "--jobs", type=int, default=-1,
+        help="# of jobs for k-NN distance (-1 uses all available cores)")
+
     args = vars(ap.parse_args())
     return args
 
@@ -87,6 +95,15 @@ def pickle_dump(datasets, imageRoot, data, labels):
         with open('datasets.json', 'w') as f:
             json.dump(data_files, f)
 
+def kNN_train(trainX, trainY):
+    # train and evaluate a k-NN classifier on the raw pixel intensities
+    print("[INFO] evaluating k-NN classifier...")
+    model = KNeighborsClassifier(n_neighbors=args["neighbors"],
+        n_jobs=args["jobs"])
+    model.fit(trainX, trainY)
+    return model
+                                      
+
 if __name__ == "__main__":
 
     args = get_args()
@@ -110,4 +127,23 @@ if __name__ == "__main__":
     print("[INFO] total data loaded: ", len(data))
     print("[INFO] total label loaded: ", len(labels))
 
+    # show some information on memory consumption of the images
+    print("[INFO] features matrix: {:.1f}MB".format(
+        data.nbytes / (1024 * 1000.0)))
+
+    # encode the labels as integers
+    le = LabelEncoder()
+    labels = le.fit_transform(labels)
+
+
+    # partition the data into training and testing splits using 75% of
+    # the data for training and the remaining 25% for testing
+    (trainX, testX, trainY, testY) = train_test_split(data, labels,
+        test_size=0.25, random_state=42)
+
+
+    # train and evaluate a k-NN classifier on the raw pixel intensities
+    model = kNN_train(trainX, trainY)
+    print(classification_report(testY, model.predict(testX),
+        target_names=le.classes_))
 
