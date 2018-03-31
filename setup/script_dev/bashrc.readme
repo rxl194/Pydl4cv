@@ -25,5 +25,6 @@ function set-title() {
 # $ gsutil cp gs://my-bucket/*.txt .
 
 # rm /tmp/jnotebook.log; nohup jupyter notebook --ip='*' --port=8100 --no-browser >& /tmp/jnotebook.log &
+# !tar cvfz notebook.tar.gz *
 
 # conda remove --name myenv --all
