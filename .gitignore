@@ -6,6 +6,7 @@ __pycache__/
 *$py.class
 *.jpg
 *.png
+*.hdf5
 
 SB_Code/datasets/animals/data_animals.pkl
 SB_Code/datasets/animals/datasets.json
@@ -16,6 +17,8 @@ SB_Code/datasets/animals/label_animals.pkl
 
 # Distribution / packaging
 .Python
+download/
+SB_Code/
 env/
 build/
 develop-eggs/
