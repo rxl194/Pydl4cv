@@ -15,7 +15,8 @@ import numpy as np
 # grab the MNIST dataset (if this is your first time using this
 # dataset then the 55MB download may take a minute)
 print("[INFO] accessing MNIST...")
-dataset = datasets.fetch_mldata("MNIST Original")
+#dataset = datasets.fetch_mldata("MNIST Original")
+dataset = datasets.fetch_openml('mnist_784')
 data = dataset.data
 
 # if we are using "channels first" ordering, then reshape the
@@ -63,8 +64,8 @@ plt.style.use("ggplot")
 plt.figure()
 plt.plot(np.arange(0, 20), H.history["loss"], label="train_loss")
 plt.plot(np.arange(0, 20), H.history["val_loss"], label="val_loss")
-plt.plot(np.arange(0, 20), H.history["acc"], label="train_acc")
-plt.plot(np.arange(0, 20), H.history["val_acc"], label="val_acc")
+plt.plot(np.arange(0, 20), H.history["accuracy"], label="train_acc")
+plt.plot(np.arange(0, 20), H.history["val_accuracy"], label="val_acc")
 plt.title("Training Loss and Accuracy")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
