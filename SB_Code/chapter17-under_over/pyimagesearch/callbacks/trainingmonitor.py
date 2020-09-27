@@ -43,7 +43,7 @@ class TrainingMonitor(BaseLogger):
 		# to file
 		if self.jsonPath is not None:
 			f = open(self.jsonPath, "w")
-			f.write(json.dumps(self.H))
+			f.write(json.dumps(str(self.H)))
 			f.close()
 
 		# ensure at least two epochs have passed before plotting
@@ -55,8 +55,8 @@ class TrainingMonitor(BaseLogger):
 			plt.figure()
 			plt.plot(N, self.H["loss"], label="train_loss")
 			plt.plot(N, self.H["val_loss"], label="val_loss")
-			plt.plot(N, self.H["acc"], label="train_acc")
-			plt.plot(N, self.H["val_acc"], label="val_acc")
+			plt.plot(N, self.H["accuracy"], label="train_acc")
+			plt.plot(N, self.H["val_accuracy"], label="val_acc")
 			plt.title("Training Loss and Accuracy [Epoch {}]".format(
 				len(self.H["loss"])))
 			plt.xlabel("Epoch #")
